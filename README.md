@@ -195,12 +195,17 @@ The power of Nix is clear!
 - [GitHub: DeterminateSystems/nix-installer](https://github.com/DeterminateSystems/nix-installer)
 - [GitHub: NixOS/nix](https://github.com/NixOS/nix)
 - [GitHub: NixOS/nixpkgs](https://github.com/NixOS/nixpkgs)
-- [Nix manual: nix search](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-search)
-- [Nix manual: nix shell](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-shell)
-- [Nix manual: nix-shell](https://nixos.org/manual/nix/stable/command-ref/nix-shell)
-- [Nix manual: nix run](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-run)
+- [Nix Reference Manual: nix search](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-search)
+- [Nix Reference Manual: nix shell](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-shell)
+- [Nix Reference Manual: nix-shell](https://nix.dev/manual/nix/latest/command-ref/nix-shell)
+- [Nix Reference Manual: nix run](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-run)
 - [NixOS Search Packages](https://search.nixos.org/packages)
 - [NixOS Status](https://status.nixos.org)
 - [Zero to Nix](https://zero-to-nix.com)
 
 Additional resources: <https://nixos.org/learn>
+
+## TODO
+
+- Why learn Nix section at the very beginning
+- Improve What is Nix section
