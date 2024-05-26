@@ -136,59 +136,65 @@ In this example `--override-flake` was used to specify a git commit of the Nixpk
 
 Notice that `nix shell` was only specified once when using multiple nix shell shebangs.
 
-## NOTE
-
-From this point forward I may include usage of the dashed commands instead of only using the newer nix command, which is still considered experimental.
-
-e.g. `nix-shell` instead of `nix shell`
-
-Many tutorials are still using the dashed commands and I want to spend more time learning than translating. I'll do the translating at a later time.
-
 ## Declarative Shell Environments
 
 So far we've created shell environments and shell scripts that let us run programs without having to install them. We can go even further and create a configuration file that defines an environment. This file can be shared with anyone to recreate the same environment on a different machine.
 
-Create a `shell.nix` file:
+Create a `flake.nix` file:
 
 ```
-let
+{
+  description = "A fun shell environment";
 
   # Pin nixpkgs to a specific release
-  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/archive/44072e24566c5bcc0b7aa9178a0104f4cfffab19.tar.gz";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/44072e24566c5bcc0b7aa9178a0104f4cfffab19";
 
-  # Explicitly set config and overlays to avoid them being inadvertently overridden by global config
-  pkgs = import nixpkgs { config = {}; overlays = []; };
+  inputs.flake-utils.url = "github:numtide/flake-utils";
 
-in
+  outputs = { self, nixpkgs, flake-utils }:
 
-pkgs.mkShellNoCC {
+    flake-utils.lib.eachDefaultSystem (system:
 
-  # Packages to include
-  packages = with pkgs; [
-    cowsay
-    lolcat
-  ];
+      let
 
-  # Define environment variables
-  GREETING = "Hello, Nix!";
+        # Explicitly set config and overlays to avoid them being inadvertently overridden by global config
+        pkgs = import nixpkgs { inherit system; config = {}; overlays = []; };
 
-  # Run a shell script on environment startup
-  shellHook = ''
-    echo $GREETING | cowsay | lolcat
-  '';
+      in {
 
+        devShells.default = pkgs.mkShellNoCC {
+          # Packages to include
+          packages = with pkgs; [
+            cowsay
+            lolcat
+          ];
+
+          # Define environment variables
+          env = {
+            GREETING = "Hello, Nix!";
+          };
+
+          # Run a shell script on environment startup
+          shellHook = ''
+            echo $GREETING | cowsay | lolcat
+          '';
+        };
+
+      }
+
+    );
 }
 ```
 
-Enter the environment by running `nix-shell` in the same directory as `shell.nix`. Packages defined in the `packages` attribute will be available in `$PATH`.
+Enter the environment by running `nix develop` in the same directory as `flake.nix`. Packages defined in the `packages` attribute will be available in `$PATH`.
 
-If you make changes to `shell.nix` just type `exit` or press `CTRL-D` to exit the environment and restart it with `nix-shell`.
+Note: If the directory you're working in is a git repository you may get an error indicating that `flake.nix` doesn't exist. Stage the file with `git add` to get nix to recognize it.
 
-Note that we've pinned nixpkgs to help create fully reproducible Nix expressions.
+If you make changes to `flake.nix` just type `exit` or press `CTRL-D` to exit the environment and restart it with `nix develop`.
+
+We've pinned nixpkgs to help create fully reproducible Nix expressions.
 
 Picking the commit can be done via [status.nixos.org](https://status.nixos.org), which list all releases.
-
-The power of Nix is clear!
 
 ## References
 
@@ -209,3 +215,4 @@ Additional resources: <https://nixos.org/learn>
 
 - Why learn Nix section at the very beginning
 - Improve What is Nix section
+- Cleanup sections
