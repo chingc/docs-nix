@@ -1,72 +1,65 @@
 # Nix
 
-Hello, this is a record of my journey in learning [Nix](https://nixos.org). It serves as a quickstart and quick reference.
+Hello, this is a record of my journey learning [Nix](https://nixos.org).
 
-This document is meant primary for myself, so it won't go too far off topic and it will assume familiarity with the command line.
+It serves as a quickstart and quick reference for my future self.
 
 ## What is it?
 
-No more "works on my machine." Create environments that work seamlessly and are easily sharable across platforms.
+Nix is a purely functional package manager. Whether you are solo or on a team, it helps you avoid the installation and versioning pain points of software development.
 
-No more broken builds or mysterious installation processes.
+Suppose you need golang, node, and python. You can create a shell environment that has those tools with a single command.
 
-#### Reproducible
+```bash
+$ go; node; python
+zsh: command not found: go
+zsh: command not found: node
+zsh: command not found: python
+
+$ nix shell nixpkgs#go nixpkgs#nodejs nixpkgs#python3
+
+$ go version
+go version go1.22.3 darwin/arm64
+
+$ node --version
+v20.12.2
+
+$ python -V
+Python 3.11.9
+
+$ exit
+
+$ go; node; python
+zsh: command not found: go
+zsh: command not found: node
+zsh: command not found: python
+```
+
+Simple! Fast!
+
+We were able to skip lengthy setup docs, we didn't have to edit our shell profile, and we didn't have to worry about `PATH` or other environment variables.
+
+Best of all, it didn't pollute the user environment. Everything is gone once you `exit` or `Ctrl-D` the shell.
+
+Other benefits?
 
 Nix builds packages in isolation from each other. This ensures that they are reproducible and don't have undeclared dependencies, so if a package works on one machine, it will also work on another.
 
-#### Declarative
-
 Nix makes it trivial to share development and build environments for your projects, regardless of what programming languages and tools you're using.
-
-#### Reliable
-
-Nix ensures that installing or upgrading one package cannot break other packages. It allows you to roll back to previous versions, and ensures that no package is in an inconsistent state during an upgrade.
 
 ## Install
 
 The easiest way to install Nix (Linux, macOS, WSL2) is to use [The Determinate Nix Installer](https://zero-to-nix.com/concepts/nix-installer).
 
+It installs Nix with flake support and the unified CLI feature already enabled. It also stores a receipt for the install process to allow for a clean uninstall.
+
 Note: Directions to upgrade or uninstall can be found in their [GitHub repo](https://github.com/DeterminateSystems/nix-installer).
-
-## Create a Shell Environment
-
-Now that Nix is installed, you can use it to create new shell environments with programs that you want to use.
-
-```bash
-$ cowsay nope
-The program 'cowsay' is currently not installed.
-
-$ echo no chance | lolcat
-The program 'lolcat' is currently not installed.
-```
-
-Required programs not installed? No problem.
-
-```bash
-$ nix shell nixpkgs#cowsay nixpkgs#lolcat
-
-$ cowsay Hello, Nix! | lolcat
-```
-
-Note: Initial runs take longer.
-
-Success! You should see a rainbow colored ASCII cow greeting.
-
-Type `exit` or press `CTRL-D` to exit the shell, and the programs won't be available anymore.
-
-```bash
-$ exit
-
-$ cowsay no more
-The program 'cowsay' is currently not installed.
-
-$ echo all gone | lolcat
-The program 'lolcat' is currently not installed.
-```
 
 ## Run Programs Directly
 
-Creating the shell environment is optional.
+We've already seen how a shell environment can be created with `nix shell`.
+
+With `nix run` we can skip creating the shell and run programs directly.
 
 ```bash
 $ nix run nixpkgs#cowsay Hello, Nix!
@@ -75,22 +68,6 @@ $ nix run nixpkgs#lolcat -- --help
 
 $ nix run nixpkgs#fortune | nix run nixpkgs#lolcat
 ```
-
-## Search for Packages
-
-If you can think of it, there's probably a Nix package of it.
-
-Go to <https://search.nixos.org/packages> or use the command line to search for packages.
-
-```bash
-$ nix search nixpkgs neovim
-```
-
-#### Wrapped vs Unwrapped
-
-The key difference between wrapped and unwrapped packages in NixOS is that wrapped packages are configured to work seamlessly within the NixOS environment, while unwrapped packages are the raw, unmodified versions.
-
-In most cases, users should install the wrapped version of a package, as it is preconfigured to work correctly on NixOS. The unwrapped version is primarily used when further customization or overriding of the package is required, as it serves as the base for creating a new wrapped derivation with additional modifications.
 
 ## Reproducible Scripts
 
@@ -106,7 +83,7 @@ This script fetches XML content from a URL, converts it to JSON, and formats it 
 
 It requires curl, xml2json, jq, and bash. If any of these dependencies are not present on the system running the script, it will fail partially or altogether.
 
-With Nix, we can declare all dependencies explicitly, and produce a script that will always run on any machine that supports Nix and the required packages taken from Nixpkgs.
+With Nix, we can declare all dependencies explicitly, and produce a script that will always run on any machine that supports Nix.
 
 ```bash
 #! /usr/bin/env nix
@@ -138,7 +115,7 @@ Notice that `nix shell` was only specified once when using multiple nix shell sh
 
 ## Declarative Shell Environments
 
-So far we've created shell environments and shell scripts that let us run programs without having to install them. We can go even further and create a configuration file that defines an environment. This file can be shared with anyone to recreate the same environment on a different machine.
+We can create a file that defines an environment. This can be shared with anyone to recreate the same environment on a different machine.
 
 Create a `flake.nix` file:
 
@@ -146,7 +123,6 @@ Create a `flake.nix` file:
 {
   description = "A fun shell environment";
 
-  # Pin nixpkgs to a specific release
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/44072e24566c5bcc0b7aa9178a0104f4cfffab19";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -157,7 +133,6 @@ Create a `flake.nix` file:
 
       let
 
-        # Explicitly set config and overlays to avoid them being inadvertently overridden by global config
         pkgs = import nixpkgs { inherit system; config = {}; overlays = []; };
 
       in {
@@ -186,15 +161,33 @@ Create a `flake.nix` file:
 }
 ```
 
-Enter the environment by running `nix develop` in the same directory as `flake.nix`. Packages defined in the `packages` attribute will be available in `$PATH`.
+Enter the environment by running `nix develop` in the same directory as `flake.nix`.
 
-Note: If the directory you're working in is a git repository you may get an error indicating that `flake.nix` doesn't exist. Stage the file with `git add` to get nix to recognize it.
+Note: If the directory you're working in is a git repository you may get an error indicating `flake.nix` doesn't exist. Stage the file with `git add` to get nix to recognize it. I don't know. It's weird like that.
 
-If you make changes to `flake.nix` just type `exit` or press `CTRL-D` to exit the environment and restart it with `nix develop`.
+If you make changes to `flake.nix` just `exit` or `Ctrl-D` to exit the environment and restart it with `nix develop`.
 
-We've pinned nixpkgs to help create fully reproducible Nix expressions.
+Nixpkgs is pinned to a specific commit for reproducibility. A list of releases can be found at [status.nixos.org](https://status.nixos.org).
 
-Picking the commit can be done via [status.nixos.org](https://status.nixos.org), which list all releases.
+## More on Versioning
+
+tbd
+
+## Search for Packages
+
+If you can think of it, there's probably a Nix package of it.
+
+Go to <https://search.nixos.org/packages> or use the command line to search for packages.
+
+```bash
+$ nix search nixpkgs neovim
+```
+
+#### Wrapped vs Unwrapped
+
+The key difference between wrapped and unwrapped packages in NixOS is that wrapped packages are configured to work seamlessly within the NixOS environment, while unwrapped packages are the raw, unmodified versions.
+
+In most cases, users should install the wrapped version of a package, as it is preconfigured to work correctly on NixOS. The unwrapped version is primarily used when further customization or overriding of the package is required, as it serves as the base for creating a new wrapped derivation with additional modifications.
 
 ## References
 
@@ -210,9 +203,3 @@ Picking the commit can be done via [status.nixos.org](https://status.nixos.org),
 - [Zero to Nix](https://zero-to-nix.com)
 
 Additional resources: <https://nixos.org/learn>
-
-## TODO
-
-- Why learn Nix section at the very beginning
-- Improve What is Nix section
-- Cleanup sections
