@@ -111,7 +111,7 @@ for n in range(1, 10):
     print(n, n * n)
 ```
 
-In this example `--override-flake` was used to specify a git commit of the Nixpkgs repository. This ensures that the script will always run with the exact same packages versions, everywhere.
+In this example `--override-flake` was used to specify a git commit hash of the Nixpkgs repository. This ensures that the script will always run with the exact same package versions, everywhere.
 
 Notice that `nix shell` was only specified once when using multiple nix shell shebangs.
 
@@ -173,7 +173,9 @@ Nixpkgs is pinned to a specific commit for reproducibility. A list of releases c
 
 ## More on Versioning
 
-tbd
+Without pinning or locking your tools and dependencies to specific versions you will eventually hit the point of development where a bug is affecting others but somehow it "works on my machine". It's often very unpleasant and very difficult to debug.
+
+We've already seen a few examples of version pinning by using the git commit hash of the Nixpkgs repository. Let's recap.
 
 ## Search for Packages
 
