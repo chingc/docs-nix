@@ -2,11 +2,13 @@
 
 Hello, this is a record of my journey learning [Nix](https://nixos.org).
 
-It serves as a quickstart and quick reference for my future self.
+I'm writing this mainly as a quickstart and quick reference for my future self, but I hope others find it helpful.
 
 ## What is it?
 
-Nix is a purely functional package manager. Whether you are solo or on a team, it helps you avoid the installation and versioning pain points of software development.
+Nix is a purely functional package manager. It helps to avoid the installation and versioning pain points of software development.
+
+That doesn't sound like much. However...
 
 Suppose you need golang, node, and python. You can create a shell environment that has those tools with a single command.
 
@@ -35,11 +37,11 @@ zsh: command not found: node
 zsh: command not found: python
 ```
 
-Simple! Fast!
+We were able to install golang, node, and python instantly.
 
-We were able to skip lengthy setup docs, we didn't have to edit our shell profile, and we didn't have to worry about `PATH` or other environment variables.
+We skipped the setup docs, we didn't edit our shell profile, and we didn't have to worry about `PATH` or other environment variables.
 
-Best of all, it didn't pollute the user environment. Everything is gone once you `exit` or `Ctrl-D` the shell.
+Best of all, we didn't pollute the user environment. Everything is gone once you `exit` or `Ctrl-D` the shell.
 
 Other benefits?
 
