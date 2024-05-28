@@ -125,6 +125,7 @@ Create a `flake.nix` file:
 {
   description = "A fun shell environment";
 
+  # Pin to a specific commit for reproducibility
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/44072e24566c5bcc0b7aa9178a0104f4cfffab19";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -169,13 +170,13 @@ Note: If the directory you're working in is a git repository you may get an erro
 
 If you make changes to `flake.nix` just `exit` or `Ctrl-D` to exit the environment and restart it with `nix develop`.
 
-Nixpkgs is pinned to a specific commit for reproducibility. A list of releases can be found at [status.nixos.org](https://status.nixos.org).
-
 ## More on Versioning
 
-Without pinning or locking your tools and dependencies to specific versions you will eventually hit the point of development where a bug is affecting others but somehow it "works on my machine". It's often very unpleasant and very difficult to debug.
+Without pinning or locking your tools and dependencies to specific versions you'll eventually hit the point of development where a bug is affecting others but somehow it "works on my machine". It's often very unpleasant and very difficult to debug.
 
-We've already seen a few examples of version pinning by using the git commit hash of the Nixpkgs repository. Let's recap.
+We've already seen a few examples of version pinning by using the git commit hash of the Nixpkgs repository. These hashes can be found at [status.nixos.org](https://status.nixos.org).
+
+Let's recap the different ways to version pin.
 
 ## Search for Packages
 
