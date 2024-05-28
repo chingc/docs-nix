@@ -180,9 +180,7 @@ Let's recap the different ways to version pin.
 
 ## Search for Packages
 
-If you can think of it, there's probably a Nix package of it.
-
-Go to <https://search.nixos.org/packages> or use the command line to search for packages.
+Go to <https://search.nixos.org/packages> or use the command line.
 
 ```bash
 $ nix search nixpkgs neovim
