@@ -37,7 +37,7 @@ zsh: command not found: node
 zsh: command not found: python
 ```
 
-We were able to install golang, node, and python instantly.
+We were able to install golang, node, and python instantly. Actually, the initial run takes a few moments, but subsequent runs are fast!
 
 We skipped the setup docs, we didn't edit our shell profile, and we didn't have to worry about `PATH` or other environment variables.
 
@@ -95,7 +95,7 @@ With Nix, we can declare all dependencies explicitly, and produce a script that 
 curl https://github.com/NixOS/nixpkgs/releases.atom | xml2json | jq .
 ```
 
-- The `--ignore-environment` option prevents the script from implicitly using programs that may already exist on the system that will run the script.
+- The `--ignore-environment` option prevents the script from implicitly using programs that may already exist on the system.
 - The `--command` option specifies the interpreter that will be invoked by nix shell after it has obtained the dependencies and initialized the environment.
 
 Notice how `nix shell` was only specified once when using multiple nix shell shebangs.
@@ -173,9 +173,21 @@ If you make changes to `flake.nix` just `exit` or `Ctrl-D` to exit the environme
 
 Without pinning or locking your tools and dependencies to specific versions you'll eventually hit the point of development where a bug is affecting others but somehow it "works on my machine". It's often very unpleasant and very difficult to debug.
 
-We've already seen a few examples of version pinning by using the git commit hash of the Nixpkgs repository. These hashes can be found at [status.nixos.org](https://status.nixos.org).
+We've already seen a few examples of version pinning by using the git commit hash of the Nixpkgs repository. There are several places where you can find these hashes.
 
-Let's recap the different ways to version pin.
+Go to [status.nixos.org](https://status.nixos.org) for the latest commits to the official Nix channels.
+
+If you are looking for an older version of a program that isn't in the current channels, that could be a little tricky.
+
+For example, the package `nginx` currently points to v1.26.0 in the unstable channel and v1.24.0 in the 23.11 channel. However, if you need the commit hash that contains nginx v1.22.1, then the easiest place to find it is from an unofficial source called [Nix Package Versions](https://lazamar.co.uk/nix-versions/).
+
+The alternative is to look for it in [Hydra](https://hydra.nixos.org), the NixOS build system. This method can be slow, difficult, and unsuccessful. Check out this [forum thread](https://discourse.nixos.org/t/steps-to-find-a-commit-with-cached-version-of-package/5674) to get an overview on how to navigate Hydra.
+
+I'd like to hear from you if you have better suggestions on how to lookup commits for older packages.
+
+With that out of the way, let's recap how to version pin.
+
+tbd
 
 ## Search for Packages
 
@@ -198,8 +210,9 @@ In most cases, users should install the wrapped version of a package, as it is p
 - [GitHub: NixOS/nixpkgs](https://github.com/NixOS/nixpkgs)
 - [Nix Reference Manual: nix search](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-search)
 - [Nix Reference Manual: nix shell](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-shell)
-- [Nix Reference Manual: nix-shell](https://nix.dev/manual/nix/latest/command-ref/nix-shell)
 - [Nix Reference Manual: nix run](https://nix.dev/manual/nix/latest/command-ref/new-cli/nix3-run)
+- [Nix Package Versions](https://lazamar.co.uk/nix-versions/)
+- [NixOS Hydra](https://hydra.nixos.org)
 - [NixOS Search Packages](https://search.nixos.org/packages)
 - [NixOS Status](https://status.nixos.org)
 - [Zero to Nix](https://zero-to-nix.com)
