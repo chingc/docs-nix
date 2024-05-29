@@ -98,12 +98,13 @@ curl https://github.com/NixOS/nixpkgs/releases.atom | xml2json | jq .
 - The `--ignore-environment` option prevents the script from implicitly using programs that may already exist on the system that will run the script.
 - The `--command` option specifies the interpreter that will be invoked by nix shell after it has obtained the dependencies and initialized the environment.
 
+Notice how `nix shell` was only specified once when using multiple nix shell shebangs.
+
 As long as the system has Nix, scripts can be written in any language without worrying about dependencies.
 
 ```bash
 #! /usr/bin/env nix
-#! nix shell --override-flake nixpkgs github:NixOS/nixpkgs/44072e24566c5bcc0b7aa9178a0104f4cfffab19
-#! nix nixpkgs#python3
+#! nix shell nixpkgs/e2dd4e18cc1c7314e24154331bae07df76eb582f#python312
 #! nix --ignore-environment --command python
 
 print("n", "n^2")
@@ -111,9 +112,7 @@ for n in range(1, 10):
     print(n, n * n)
 ```
 
-In this example `--override-flake` was used to specify a git commit hash of the Nixpkgs repository. This ensures that the script will always run with the exact same package versions, everywhere.
-
-Notice that `nix shell` was only specified once when using multiple nix shell shebangs.
+In this example we've included a git commit hash of the Nixpkgs repository. This ensures that the script will always run with the exact same package versions, everywhere.
 
 ## Declarative Shell Environments
 
@@ -126,7 +125,7 @@ Create a `flake.nix` file:
   description = "A fun shell environment";
 
   # Pin to a specific commit for reproducibility
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/44072e24566c5bcc0b7aa9178a0104f4cfffab19";
+  inputs.nixpkgs.url = "nixpkgs/e2dd4e18cc1c7314e24154331bae07df76eb582f";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
