@@ -37,7 +37,7 @@ zsh: command not found: node
 zsh: command not found: python
 ```
 
-We were able to install golang, node, and python instantly. Actually, the initial run takes a few moments, but subsequent runs are fast!
+We were able to get access to golang, node, and python instantly. Actually, the initial run takes a few moments, but subsequent runs are fast!
 
 We skipped the setup docs, we didn't edit our shell profile, and we didn't have to worry about `PATH` or other environment variables.
 
