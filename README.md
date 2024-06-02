@@ -205,6 +205,8 @@ In most cases, users should install the wrapped version of a package, as it is p
 
 ## References
 
+Below are some of the main sources I've used.
+
 - [GitHub: DeterminateSystems/nix-installer](https://github.com/DeterminateSystems/nix-installer)
 - [GitHub: NixOS/nix](https://github.com/NixOS/nix)
 - [GitHub: NixOS/nixpkgs](https://github.com/NixOS/nixpkgs)
@@ -215,6 +217,11 @@ In most cases, users should install the wrapped version of a package, as it is p
 - [NixOS Hydra](https://hydra.nixos.org)
 - [NixOS Search Packages](https://search.nixos.org/packages)
 - [NixOS Status](https://status.nixos.org)
+- [nix.dev](https://nix.dev)
 - [Zero to Nix](https://zero-to-nix.com)
+
+Other notable sources:
+
+- [Kubukoz Blog: Nix Flakes First Steps](https://blog.kubukoz.com/flakes-first-steps/)
 
 Additional resources: <https://nixos.org/learn>
